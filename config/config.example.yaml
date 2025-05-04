@@ -1,0 +1,38 @@
+app:
+  name: query-router
+  version: 0.1.0
+  debug: false
+  log_level: info
+
+server:
+  host: 0.0.0.0
+  port: 8000
+  workers: 0  # 0 means workers = CPU cores × 2
+
+models:
+  classifier:
+    name: MoritzLaurer/mDeBERTa-v3-base-mnli-xnli  # or facebook/bart-large-mnli
+    device: cpu
+    batch_size: 1
+    confidence_threshold: 0.75
+  
+  prompt_guard:
+    name: meta-llama/Llama-Prompt-Guard-2-86M
+    device: cpu
+    batch_size: 1
+  
+  llm_router:
+    provider: openai  # or azure, anthropic, ollama, etc.
+    model: gpt-4o  # or llama-3, mistral, etc.
+    api_key: "sk-..."  # Set via env var in prod, do not commit real keys
+    temperature: 1
+    max_tokens: 1024
+    base_url: null  # For custom endpoints (Ollama, vLLM, etc.)
+    extra_args: {}  # For any additional LiteLLM kwargs
+
+logging:
+  format: json
+  include_trace_id: true
+  include_timestamp: true
+  include_level: true
+  sanitize_keys: true  # strip sensitive data from logs 

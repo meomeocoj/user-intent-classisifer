@@ -1,0 +1,6 @@
+query,history,label
+"What is the capital of France?","","simple"
+"Summarize the main findings from the latest research papers on quantum computing.","","semantic"
+"Help me design a research plan to study the effects of climate change on marine ecosystems.","","agent"
+"Hi","","simple"
+"Compare the economic systems of France and Germany","","semantic" 
