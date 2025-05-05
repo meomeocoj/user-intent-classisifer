@@ -99,8 +99,8 @@ Response (application/json):
 ```mermaid
 flowchart TD
     A[HTTP Client] --> B[/FastAPI Gateway/]
-    B --> C{{Prompt-Guard (86M)}}
-    C --> D[[BART-MNLI<br>Depth Classifier]]
+    B --> C[Prompt-Guard 86M]
+    C --> D[Depth Classifier]
     D -->|simple & conf≥0.75| R[Return JSON]
     D -->|else| E[[LLM Router<br>(GPT-4o-mini<br>or Llama-3-8B)]]
     E --> F{{Prompt-Guard}}
