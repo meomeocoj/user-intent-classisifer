@@ -1,3 +1,10 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+
 # Logs
 logs
 *.log
