@@ -15,7 +15,8 @@ class LLMRouter:
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         if config is None:
             config = load_config()["models"]["llm_router"]
-        self.provider = config.get("provider", "openai")
+        # If 'provider' is not in config, set to None instead of defaulting to 'openai'
+        self.provider = config.get("provider")
         self.model = config.get("model", "gpt-4o")
         self.api_key = config.get("api_key")
         self.temperature = config.get("temperature", 0.7)
@@ -41,19 +42,23 @@ class LLMRouter:
     def route(self, query: str, history: Optional[List[str]] = None) -> Dict[str, Any]:
         messages = self._build_prompt(query, history)
         kwargs = {
-            "model": self.model,
             "messages": messages,
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
         }
-        if self.api_key:
-            kwargs["api_key"] = self.api_key
-        if self.base_url:
-            kwargs["base_url"] = self.base_url
+        # if self.api_key:
+        #     kwargs["api_key"] = self.api_key
+        # if self.base_url:
+        #     kwargs["base_url"] = self.base_url
         kwargs.update(self.extra_args)
         try:
             logger.info("llm_router_call", provider=self.provider, model=self.model)
-            response = litellm.completion(**kwargs)
+            logger.info("kwargs", kwargs=kwargs)
+            response = litellm.completion(
+                custom_llm_provider="litellm_proxy",
+                api_key=self.api_key,
+                model=self.model, 
+                base_url=self.base_url, **kwargs)  # noqa: E501
             content = response["choices"][0]["message"]["content"]
             logger.debug("llm_router_raw_response", content=content)
             # Parse JSON from response

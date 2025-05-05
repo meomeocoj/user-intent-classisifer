@@ -4,12 +4,14 @@ Performance test script for router API.
 Requirements: requests, numpy, psutil
 """
 import argparse
-import requests
-import time
-import numpy as np
 import platform
-import psutil
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import numpy as np
+import psutil
+import requests
+
 
 # --- CLI Arguments ---
 def parse_args():

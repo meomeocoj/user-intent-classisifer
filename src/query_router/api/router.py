@@ -2,6 +2,7 @@
 API router and endpoint definitions.
 """
 from uuid import uuid4
+import time
 
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import ValidationError
@@ -35,6 +36,7 @@ async def route_query(request: RouteRequest, req: Request) -> RouteResponse:
         HTTPException: When processing fails or input is invalid
     """
     trace_id = str(uuid4())
+    start_time = time.time()
     logger.info(
         "route_request_received", 
         trace_id=trace_id, 
@@ -45,7 +47,14 @@ async def route_query(request: RouteRequest, req: Request) -> RouteResponse:
     
     try:
         # Use RouterService for all routing logic
-        result = await router_service.route_query(request.query, request.history)
+        result, timing = await router_service.route_query(request.query, request.history, trace_id=trace_id, timing_enabled=True)
+        total_time = (time.time() - start_time) * 1000
+        logger.info(
+            "route_total_time_ms",
+            trace_id=trace_id,
+            total_time_ms=f"{total_time:.2f}",
+            **timing
+        )
         
         # Check for error or blocked routes
         if result.get("route") == "blocked":
