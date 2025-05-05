@@ -102,7 +102,7 @@ flowchart TD
     B --> C[Prompt-Guard 86M]
     C --> D[Depth Classifier]
     D -->|simple & conf≥0.75| R[Return JSON]
-    D -->|else| E[[LLM Router<br>(GPT-4o-mini<br>or Llama-3-8B)]]
+    D -->|else| E[LLM Router]
     E --> F{{Prompt-Guard}}
     F --> R
 ```
